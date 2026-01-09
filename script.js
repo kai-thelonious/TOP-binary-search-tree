@@ -103,18 +103,18 @@ class Tree {
 	find(value, node = this.root) {
 		if (node === null || node.data === value) return node;
 
-        if (value < node.data) {
-            return this.find(value, node.left);
-        }
-        return this.find(value, node.right);
+		if (value < node.data) {
+			return this.find(value, node.left);
+		}
+		return this.find(value, node.right);
 	}
 
-    levelOrderForEach(callback) {
+	levelOrderForEach(callback) {
 		let queue = [];
 		queue.push(this.root);
 
 		if (!callback) {
-			throw new Error("A callback is required");
+			throw new Error('A callback is required');
 		}
 		if (this.root === null) return;
 
@@ -124,50 +124,51 @@ class Tree {
 			if (current.left) queue.push(current.left);
 			if (current.right) queue.push(current.right);
 		}
-    }
+	}
 
-    inOrderForEach(callback, node = this.root) {
+	inOrderForEach(callback, node = this.root) {
 		if (!callback) throw new Error('Callback required');
 		if (node === null) return;
 
 		this.inOrderForEach(callback, node.left);
 		callback(node);
 		this.inOrderForEach(callback, node.right);
-    }
+	}
 
-    preOrderForEach(callback, node = this.root) {
+	preOrderForEach(callback, node = this.root) {
 		if (!callback) throw new Error('Callback required');
 		if (node === null) return;
 
 		callback(node);
 		this.preOrderForEach(callback, node.left);
-		this.preOrderForEach(callback, node.right);		
-    }
+		this.preOrderForEach(callback, node.right);
+	}
 
-    postOrderForEach(callback, node = this.root) {
+	postOrderForEach(callback, node = this.root) {
 		if (!callback) throw new Error('Callback required');
 		if (node === null) return;
 
 		this.postOrderForEach(callback, node.left);
-		this.postOrderForEach(callback, node.right);	
+		this.postOrderForEach(callback, node.right);
 		callback(node);
-    }
+	}
 
-    height(value) {
+	height(value) {
 		const node = this.find(value);
-		if (node === null) return "Value does not exist";
+		if (node === null) return 'Value does not exist';
 
 		return this.findHeight(node);
-    }
+	}
 
 	findHeight(node) {
 		if (node === null) return -1;
 
-		return Math.max(this.findHeight(node.left), this.findHeight(node.right)) + 1
-		
+		return (
+			Math.max(this.findHeight(node.left), this.findHeight(node.right)) + 1
+		);
 	}
 
-    depth(value) {
+	depth(value) {
 		let current = this.root;
 		let distance = 0;
 
@@ -185,11 +186,10 @@ class Tree {
 		}
 
 		return "Value doesn't exist";
-    }
+	}
 
-    isBalanced(node = this.root) {
+	isBalanced(node = this.root) {
 		if (node === null) return true;
-
 
 		// Calculate height of both sides
 		let leftHeight = this.findHeight(node.left);
@@ -202,14 +202,19 @@ class Tree {
 			difference <= 1 &&
 			this.isBalanced(node.left) &&
 			this.isBalanced(node.right)
-		)
-		
-    }
+		);
+	}
 
-    rebalance() {
-        
-    }
+	rebalance() {
+		let sortedArray = [];
 
+		this.inOrderForEach((node) => {
+			sortedArray.push(node.data);
+		});
+
+		this.root = this.buildTree(sortedArray, 0, sortedArray.length - 1);
+
+	}
 }
 
 function generateRandomNumbers(amount) {
@@ -223,9 +228,8 @@ function generateRandomNumbers(amount) {
 	return array;
 }
 
-
-const randomData = generateRandomNumbers(10);
-const tree = new Tree(randomData);
+// const randomData = generateRandomNumbers(10);
+// const tree = new Tree(randomData);
 
 // console.log('First tree: ');
 // tree.prettyPrint(tree.root);
@@ -234,15 +238,28 @@ const tree = new Tree(randomData);
 // tree.prettyPrint(tree.root);
 // tree.delete(74);
 // console.log;
-tree.prettyPrint(tree.root);
+// tree.prettyPrint(tree.root);
 
-const target = randomData[0]
+// const target = randomData[0];
 
 // console.log('Searching for:', target);
 // console.log('Found node:', tree.find(target));
-const printNode = (node) => console.log(node.data);
+// const printNode = (node) => console.log(node.data);
 // tree.levelOrderForEach(printNode);
 // tree.inOrderForEach(printNode);
-console.log(target)
-console.log(tree.height(target));
-console.log(tree.isBalanced());
+// console.log(target);
+// console.log(tree.height(target));
+
+const orderedArray = [1,2,3,4,5]
+const lopsidedTree = new Tree(orderedArray);
+lopsidedTree.insert(10);
+lopsidedTree.insert(20);
+lopsidedTree.insert(30);
+lopsidedTree.insert(40);
+lopsidedTree.insert(50);
+// lopsidedTree.prettyPrint(lopsidedTree.root);
+console.log(lopsidedTree.isBalanced());
+lopsidedTree.rebalance();
+console.log(lopsidedTree.isBalanced());
+lopsidedTree.prettyPrint(lopsidedTree.root);
+
