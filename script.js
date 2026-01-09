@@ -110,19 +110,47 @@ class Tree {
 	}
 
     levelOrderForEach(callback) {
+		let queue = [];
+		queue.push(this.root);
 
+		if (!callback) {
+			throw new Error("A callback is required");
+		}
+		if (this.root === null) return;
+
+		while (queue.length) {
+			let current = queue.shift();
+			callback(current);
+			if (current.left) queue.push(current.left);
+			if (current.right) queue.push(current.right);
+		}
     }
 
-    inOrderForEach(callback) {
+    inOrderForEach(callback, node = this.root) {
+		if (!callback) throw new Error('Callback required');
+		if (node === null) return;
 
+		this.inOrderForEach(callback, node.left);
+		callback(node);
+		this.inOrderForEach(callback, node.right);
     }
 
-    preOrderForEach(callback) {
+    preOrderForEach(callback, node = this.root) {
+		if (!callback) throw new Error('Callback required');
+		if (node === null) return;
 
+		callback(node);
+		this.preOrderForEach(callback, node.left);
+		this.preOrderForEach(callback, node.right);		
     }
 
-    postOrderForEach(callback) {
+    postOrderForEach(callback, node = this.root) {
+		if (!callback) throw new Error('Callback required');
+		if (node === null) return;
 
+		this.postOrderForEach(callback, node.left);
+		this.postOrderForEach(callback, node.right);	
+		callback(node);
     }
 
     height(value) {
@@ -158,16 +186,19 @@ function generateRandomNumbers(amount) {
 const randomData = generateRandomNumbers(10);
 const tree = new Tree(randomData);
 
-console.log('First tree: ');
-tree.prettyPrint(tree.root);
-console.log('Second tree: ');
-tree.insert(101);
-tree.prettyPrint(tree.root);
-tree.delete(74);
-console.log;
-tree.prettyPrint(tree.root);
+// console.log('First tree: ');
+// tree.prettyPrint(tree.root);
+// console.log('Second tree: ');
+// tree.insert(101);
+// tree.prettyPrint(tree.root);
+// tree.delete(74);
+// console.log;
+// tree.prettyPrint(tree.root);
 
-const target = randomData[0]
+// const target = randomData[0]
 
-console.log('Searching for:', target);
-console.log('Found node:', tree.find(target));
+// console.log('Searching for:', target);
+// console.log('Found node:', tree.find(target));
+const printNode = (node) => console.log(node.data);
+// tree.levelOrderForEach(printNode);
+tree.inOrderForEach(printNode);
