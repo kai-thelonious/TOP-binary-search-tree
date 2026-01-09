@@ -154,15 +154,56 @@ class Tree {
     }
 
     height(value) {
+		const node = this.find(value);
+		if (node === null) return "Value does not exist";
 
+		return this.findHeight(node);
     }
+
+	findHeight(node) {
+		if (node === null) return -1;
+
+		return Math.max(this.findHeight(node.left), this.findHeight(node.right)) + 1
+		
+	}
 
     depth(value) {
+		let current = this.root;
+		let distance = 0;
 
+		while (current !== null) {
+			if (value < current.data) {
+				current = current.left;
+				distance++;
+			} else if (value > current.data) {
+				current = current.right;
+				distance++;
+			} else {
+				// Found it!
+				return distance;
+			}
+		}
+
+		return "Value doesn't exist";
     }
 
-    isBalanced() {
+    isBalanced(node = this.root) {
+		if (node === null) return true;
 
+
+		// Calculate height of both sides
+		let leftHeight = this.findHeight(node.left);
+		let rightHeight = this.findHeight(node.right);
+
+		// Check if the specific node is balanced
+		let difference = Math.abs(leftHeight - rightHeight);
+
+		return (
+			difference <= 1 &&
+			this.isBalanced(node.left) &&
+			this.isBalanced(node.right)
+		)
+		
     }
 
     rebalance() {
@@ -193,12 +234,15 @@ const tree = new Tree(randomData);
 // tree.prettyPrint(tree.root);
 // tree.delete(74);
 // console.log;
-// tree.prettyPrint(tree.root);
+tree.prettyPrint(tree.root);
 
-// const target = randomData[0]
+const target = randomData[0]
 
 // console.log('Searching for:', target);
 // console.log('Found node:', tree.find(target));
 const printNode = (node) => console.log(node.data);
 // tree.levelOrderForEach(printNode);
-tree.inOrderForEach(printNode);
+// tree.inOrderForEach(printNode);
+console.log(target)
+console.log(tree.height(target));
+console.log(tree.isBalanced());
